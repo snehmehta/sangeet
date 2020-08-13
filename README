@@ -1,0 +1,5 @@
+### csrf 
+- Adding hidden token
+
+### password hashing
+- Saving only hash of user's password

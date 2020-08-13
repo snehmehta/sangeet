@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Hello, {{ user.username }}</h1>
+{% for song in songs %}
+<div>
+    <p>
+        Title: {{ song.title}} -{{ song.author}}
+    </p>
+
+    <a href="{{ song.url }}">play</a>
+    <hr>
+</div>
+{% endfor %}
+
+{% endblock %}
