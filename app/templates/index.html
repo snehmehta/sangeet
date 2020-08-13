@@ -2,11 +2,11 @@
 
 {% block content %}
 
-<h1>Hello, {{ user.username }}</h1>
+<h1>Hello, {{ current_user.username }}</h1>
 {% for song in songs %}
 <div>
     <p>
-        Title: {{ song.title}} -{{ song.author}}
+        Title: {{ song.title}} -{{ song.artist }}
     </p>
 
     <a href="{{ song.url }}">play</a>
