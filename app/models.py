@@ -32,8 +32,8 @@ class Song(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
-    title = db.Column(db.String(40),index=True),  
-    artist = db.Column(db.String(40), index=True),
+    title = db.Column(db.String(40),index=True)
+    artist = db.Column(db.String(40), index=True)
     album = db.Column(db.String(40), index=True)
     url = db.Column(db.String(40), index=True, unique=True)
     

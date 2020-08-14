@@ -3,15 +3,45 @@
 {% block content %}
 
 <h1>Hello, {{ current_user.username }}</h1>
+
+<form action="" method="post" enctype=multipart/form-data>
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.song.label }}:
+        {{ form.song }}<br>
+        {% for error in form.song.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>{{ form.submit() }}</p>
+
+</form>
+<br>
+<hr>
 {% for song in songs %}
 <div>
     <p>
-        Title: {{ song.title}} -{{ song.artist }}
+        Title: {{ song.title}}
+        {% if song.artist %}
+        - {{ song.artist }}
+        {% endif %}
+
     </p>
 
-    <a href="{{ song.url }}">play</a>
+    <audio controls>
+        <source src="{{ url_for('static', filename='music/')}}{{ song.url }}" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
     <hr>
 </div>
+{% if prev_url %}
+        <a href="{{ prev_url }}">Newer Songs</a>
+{% endif %}
+{% if next_url %}
+        <a href="{{ next_url }}">Older Songs</a>
+{% endif %}
+
 {% endfor %}
 
 {% endblock %}

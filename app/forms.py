@@ -1,8 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, FileField
 
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo
-from app.models import User
+from app.models import User, Song
+
 class LoginForm(FlaskForm):
 
     username = StringField('Username', validators=[DataRequired()])
@@ -12,6 +13,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Sign In')
 
 class RegistrationForm(FlaskForm):
+
 
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -31,3 +33,16 @@ class RegistrationForm(FlaskForm):
         if user is not None:
 
             raise ValidationError('Please use a different email address')
+
+class SongForm(FlaskForm):
+    
+    song = FileField('Song', validators=[DataRequired()])
+    submit = SubmitField('Upload')
+
+
+    def validate_song(self, song):
+        from flask_login import current_user
+        song = current_user.songs.filter_by(title=song.data.filename).first()
+        if song is not None:
+
+            raise ValidationError('Song already present')

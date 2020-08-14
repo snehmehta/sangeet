@@ -1,5 +1,18 @@
+## Security (SOLVED)
 ### csrf 
 - Adding hidden token
 
 ### password hashing
 - Saving only hash of user's password
+
+### xss
+- Rejecting all files expect mp3.
+
+## Non functional Requirement
+### Duplication 
+- Users can store same song only once
+- Another user can store that song on their playlist 
+
+## UX
+### Pagination
+- 5 songs per page  (Can be any number)
