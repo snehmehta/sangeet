@@ -34,6 +34,14 @@ class RegistrationForm(FlaskForm):
 
             raise ValidationError('Please use a different email address')
 
+
+class EditSongMeta(FlaskForm):
+
+    title = StringField('Title', validators=[DataRequired()], render_kw={'disabled':''})
+    artist = StringField('Artist')
+    album = StringField('Album')
+    submit = SubmitField('Submit')
+
 class SongForm(FlaskForm):
     
     song = FileField('Song', validators=[DataRequired()])

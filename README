@@ -1,4 +1,4 @@
-## Security (SOLVED)
+## Security (With Solution)
 ### csrf 
 - Adding hidden token
 
@@ -16,3 +16,8 @@
 ## UX
 ### Pagination
 - 5 songs per page  (Can be any number)
+
+## Scalability
+### Database
+- Using flask migrate with SqlAlchmey 
+

@@ -1,7 +1,7 @@
-from flask import render_template, flash, redirect, url_for, request, send_from_directory
+from flask import render_template, flash, redirect, url_for, request, send_file
 from app import app
 from app import db
-from app.forms import LoginForm, RegistrationForm, SongForm
+from app.forms import LoginForm, RegistrationForm, SongForm, EditSongMeta
 from app.models import User, Song
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
@@ -106,7 +106,57 @@ def register():
 
    return render_template('register.html', title='Register', form=form)
 
-@app.route('/uploads/<filename>')
-def uploaded_file(filename):
-   return render_template('play.html', url=os.path.join(app.config['UPLOAD_DIR'],
-                               filename))
+
+@app.route('/play/<file_url>')
+def play(file_url):
+   song = Song.query.filter_by(url=file_url).first()
+   song_name = song.title.split('.')[0]
+   return render_template('play.html', song=song, title=f'Playing {song_name}')
+
+
+@login_required
+@app.route('/download/<file_url>/<file_name>')
+def download(file_url, file_name):
+   
+   return send_file(os.path.join(app.config['UPLOAD_DIR'],file_url), as_attachment=True, attachment_filename=file_name)
+
+
+@login_required
+@app.route('/delete/<file_url>')
+def delete(file_url):
+   
+   song = Song.query.filter_by(url=file_url).first()
+   db.session.delete(song)
+   db.session.commit()
+   
+   os.remove(os.path.join(app.config['UPLOAD_DIR'], file_url))
+
+   return redirect(url_for('index'))
+
+
+
+@app.route('/edit/<file_url>', methods=['GET', 'POST'])
+def edit(file_url):
+
+   song = current_user.songs.filter_by(url=file_url).first_or_404()
+
+   form = EditSongMeta()
+
+   if form.validate_on_submit():
+
+      song.title = form.title.data
+      song.artist = form.artist.data 
+      song.album = form.album.data
+
+      db.session.commit()
+
+      flash('Your changes have been saved')
+      return redirect(url_for('play',file_url=file_url))
+
+   elif request.method == 'GET':
+
+      form.title.data = song.title
+      form.artist.data  = song.artist
+      form.album.data = song.album
+
+   return render_template('edit.html', form=form, title='Edit Song')

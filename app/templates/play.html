@@ -1,7 +1,33 @@
 {% extends 'base.html' %}
 
-{% block content %}
+{% block app_content %}
+<p>
+    Title: {{ song.title}}
+    {% if song.artist %}
+    - {{ song.artist }}
+    {% endif %}
+    {% if song.album %}
+<p>Album: {{song.album}}</p>
+{% endif %}
 
-<audio src="{{ url }}" controls></audio>
+</p>
+
+<audio controls>
+    <source src="{{ url_for('static', filename='music/')}}{{ song.url }}" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+<div class="container">
+    <ul class="list-inline list-group-horizontal-lg">
+        <li class="list-group-item"><a href="{{ url_for('download',file_url=song.url, file_name=song.title) }}">
+                Download
+            </a>
+        </li>
+
+        <li class="list-group-item"><a href="{{ url_for('edit', file_url=song.url) }}">Edit</a></li>
+        <li class="list-group-item"><a href="{{ url_for('delete', file_url=song.url) }}">Delete</a></li>
+    </ul>
+
+</div>
+<hr>
 
 {% endblock %}
