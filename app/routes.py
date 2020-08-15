@@ -147,7 +147,6 @@ def edit(file_url):
 
    if form.validate_on_submit():
 
-      song.title = form.title.data
       song.artist = form.artist.data 
       song.album = form.album.data
 

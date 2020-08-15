@@ -39,7 +39,7 @@ class RegistrationForm(FlaskForm):
 
 class EditSongMeta(FlaskForm):
 
-    title = StringField('Title', validators=[DataRequired()], render_kw={'disabled':''})
+    title = StringField('Title', render_kw={'disabled':''})
     artist = StringField('Artist')
     album = StringField('Album')
     submit = SubmitField('Submit')
