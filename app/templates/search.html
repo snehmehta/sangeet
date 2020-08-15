@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block app_content %}
+
+<h1>Search Result</h1>
+
+{% if songs %}
+{% for song in songs %}
+
+<div>
+    <p>
+        Title: {{ song.title}}
+        {% if song.artist %}
+        - {{ song.artist }}
+        {% endif %}
+        <a href="{{ url_for('play', file_url=song.url) }}">Play</a>
+    </p>
+
+</div>
+
+{% endfor %}
+
+{% else %}
+<p>No such songs / album / artist avaliable</p>
+{% endif %}
+
+
+
+{% endblock %}

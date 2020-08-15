@@ -1,7 +1,7 @@
-from flask import render_template, flash, redirect, url_for, request, send_file
+from flask import render_template, flash, redirect, url_for, request, send_file, Response, g
 from app import app
 from app import db
-from app.forms import LoginForm, RegistrationForm, SongForm, EditSongMeta
+from app.forms import LoginForm, RegistrationForm, SongForm, EditSongMeta, SearchForm
 from app.models import User, Song
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
@@ -9,21 +9,13 @@ from werkzeug.utils import secure_filename
 import os 
 import audio_metadata
 from app import helpers
+from sqlalchemy import or_
 
 ALLOWED_EXTENSIONS = {'mp3'}
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-def gen(song):
-   
-   with open(song, "rb") as f:
-      print(song) # DEBUG
-      data = f.read(1024)
-      while data:
-         yield data
-         data = f.read(1024)
 
 
 @app.route('/',methods=['GET', 'POST'])
@@ -106,6 +98,17 @@ def register():
 
    return render_template('register.html', title='Register', form=form)
 
+# FOR BIG BIG AUDIO FILES
+@app.route("/wav")
+def streamwav():
+    def generate():
+        with open("app//static//music//znitqa.mp3", "rb") as fwav:
+            data = fwav.read(1024)
+            while data:
+                yield data
+                data = fwav.read(1024)
+    return Response(generate(), mimetype="audio/x-wav")
+
 
 @app.route('/play/<file_url>')
 def play(file_url):
@@ -160,3 +163,26 @@ def edit(file_url):
       form.album.data = song.album
 
    return render_template('edit.html', form=form, title='Edit Song')
+
+@app.before_request
+def before_request():
+   if current_user.is_authenticated:
+
+      g.search_form = SearchForm()
+
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+   
+   if not g.search_form.validate():
+        return redirect(url_for('index'))
+   
+
+   songs = current_user.songs.filter(or_(
+      Song.title.like('%' + g.search_form.q.data +'%'),
+      Song.album.like('%' + g.search_form.q.data +'%'),
+      Song.artist.like('%' + g.search_form.q.data +'%')
+   )).all()
+      
+   return render_template('search.html', title='Search', songs=songs)
+ 
