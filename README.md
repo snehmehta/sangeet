@@ -1,10 +1,7 @@
 # Music Managment - Sangeet 
 
 ### Try our already Deployed on Heroku
-```
-https://sangeett.herokuapp.com/index
-```
-
+[Click Me - Sangeet!](https://sangeett.herokuapp.com/index)
 
 ### Installing
 

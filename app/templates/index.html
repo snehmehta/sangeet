@@ -27,12 +27,27 @@
 {% for song in songs %}
 
 <div>
+    <div class="container">
     <p>
         Title: {{ song.title}}
         {% if song.artist %}
         - {{ song.artist }}
         {% endif %}
-        <a href="{{ url_for('play', file_url=song.url) }}">Play</a>
+        
+        
+            <ul class="list-inline list-group-horizontal-lg">
+                <li class="list-group-item"><a href="{{ url_for('play', file_url=song.url) }}">Play</a></li>
+                <li class="list-group-item"><a href="{{ url_for('download',file_url=song.url, file_name=song.title) }}">
+                        Download
+                    </a>
+                </li>
+        
+                
+                <li class="list-group-item"><a href="{{ url_for('edit', file_url=song.url) }}">Edit</a></li>
+                <li class="list-group-item"><a href="{{ url_for('delete', file_url=song.url) }}">Delete</a></li>
+            </ul>
+        
+        </div>
     </p>
 
 </div>
