@@ -137,7 +137,7 @@ def delete(file_url):
    return redirect(url_for('index'))
 
 
-
+@login_required
 @app.route('/edit/<file_url>', methods=['GET', 'POST'])
 def edit(file_url):
 
@@ -169,7 +169,7 @@ def before_request():
 
       g.search_form = SearchForm()
 
-
+@login_required
 @app.route('/search', methods=['GET', 'POST'])
 def search():
    
@@ -178,10 +178,9 @@ def search():
    
 
    songs = current_user.songs.filter(or_(
-      Song.title.like('%' + g.search_form.q.data +'%'),
-      Song.album.like('%' + g.search_form.q.data +'%'),
-      Song.artist.like('%' + g.search_form.q.data +'%')
+      Song.title.ilike('%' + g.search_form.q.data +'%'),
+      Song.album.ilike('%' + g.search_form.q.data +'%'),
+      Song.artist.ilike('%' + g.search_form.q.data +'%')
    )).all()
       
    return render_template('search.html', title='Search', songs=songs)
- 
